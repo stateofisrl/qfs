@@ -88,5 +88,5 @@ databases:
   - name: tesla-giveaway-db
     databaseName: giveaway_platform
     user: giveaway_user
+    plan: starter
     region: oregon
-    # Plan will be selected during creation in Render dashboard (paid tier)
