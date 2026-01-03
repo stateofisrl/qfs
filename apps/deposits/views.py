@@ -102,7 +102,7 @@ def deposits_page(request):
     
     # Get wallets and user deposits first (for all cases)
     wallets = CryptoWallet.objects.filter(is_active=True)
-    user_deposits = Deposit.objects.filter(user=user).order_by('-created_at').distinct()
+    user_deposits = Deposit.objects.filter(user=user).order_by('-created_at').distinct()[:5]
     
     # Get currency symbol and exchange rate from context processor
     try:
@@ -175,7 +175,7 @@ def deposits_page(request):
             
             context_data['success'] = 'Deposit submitted successfully! Admin will review and approve it.'
             # Refresh deposits list from database
-            context_data['deposits'] = Deposit.objects.filter(user=user).order_by('-created_at').distinct()
+            context_data['deposits'] = Deposit.objects.filter(user=user).order_by('-created_at').distinct()[:5]
             
             return render(request, 'deposits.html', context_data)
         
