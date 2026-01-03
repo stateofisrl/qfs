@@ -96,6 +96,9 @@ else:
             'PASSWORD': os.environ.get('DB_PASSWORD', ''),
             'HOST': os.environ.get('DB_HOST', ''),
             'PORT': os.environ.get('DB_PORT', ''),
+            'OPTIONS': {
+                'timeout': 20,  # Increase SQLite timeout to 20 seconds
+            }
         }
     }
 
