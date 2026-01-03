@@ -154,7 +154,7 @@ def investments_page(request):
             if investment.status != 'active':
                 context_data = {
                     'plans': InvestmentPlan.objects.filter(is_active=True).order_by('roi_percentage'),
-                    'user_investments': UserInvestment.objects.filter(user=user).order_by('-created_at'),
+                    'user_investments': UserInvestment.objects.filter(user=user, status='active').order_by('-created_at'),
                     'balance': user.balance,
                     'currency_symbol': currency_symbol,
                     'error': 'Only active investments can be cancelled.'
@@ -167,7 +167,7 @@ def investments_page(request):
             
             context_data = {
                 'plans': InvestmentPlan.objects.filter(is_active=True).order_by('roi_percentage'),
-                'user_investments': UserInvestment.objects.filter(user=user).order_by('-created_at'),
+                'user_investments': UserInvestment.objects.filter(user=user, status='active').order_by('-created_at'),
                 'balance': user.balance,
                 'currency_symbol': currency_symbol,
                 'success': f'Investment cancelled successfully! ${investment.amount} refunded to your balance.'
@@ -177,7 +177,7 @@ def investments_page(request):
         except UserInvestment.DoesNotExist:
             context_data = {
                 'plans': InvestmentPlan.objects.filter(is_active=True).order_by('roi_percentage'),
-                'user_investments': UserInvestment.objects.filter(user=user).order_by('-created_at'),
+                'user_investments': UserInvestment.objects.filter(user=user, status='active').order_by('-created_at'),
                 'balance': user.balance,
                 'currency_symbol': currency_symbol,
                 'error': 'Investment not found.'
@@ -191,7 +191,7 @@ def investments_page(request):
         
         context_data = {
             'plans': InvestmentPlan.objects.filter(is_active=True).order_by('roi_percentage'),
-            'user_investments': UserInvestment.objects.filter(user=user).order_by('-created_at'),
+            'user_investments': UserInvestment.objects.filter(user=user, status='active').order_by('-created_at'),
             'balance': user.balance,
             'currency_symbol': currency_symbol,
         }
@@ -232,7 +232,7 @@ def investments_page(request):
             user.save()
             
             context_data['success'] = f'Investment in {plan.name} created successfully!'
-            context_data['user_investments'] = UserInvestment.objects.filter(user=user).order_by('-created_at')
+            context_data['user_investments'] = UserInvestment.objects.filter(user=user, status='active').order_by('-created_at')
             context_data['balance'] = user.balance
             
             return render(request, 'investments.html', context_data)
@@ -246,7 +246,7 @@ def investments_page(request):
     
     # GET request - show page
     plans = InvestmentPlan.objects.filter(is_active=True).order_by('roi_percentage')
-    user_investments = UserInvestment.objects.filter(user=user).order_by('-created_at')
+    user_investments = UserInvestment.objects.filter(user=user, status='active').order_by('-created_at')
     
     return render(request, 'investments.html', {
         'plans': plans,
