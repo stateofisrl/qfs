@@ -185,15 +185,21 @@ function showAlertModal(message, type = 'info') {
 
 // Check for server-side alerts and display them on page load
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded fired');
     const successMsg = document.getElementById('alert-success-msg');
     const errorMsg = document.getElementById('alert-error-msg');
     
+    console.log('Success msg element:', successMsg);
+    console.log('Error msg element:', errorMsg);
+    
     if (successMsg && successMsg.textContent.trim()) {
+        console.log('Showing success alert with message:', successMsg.textContent);
         showAlertModal(successMsg.textContent, 'success');
         successMsg.remove();
     }
     
     if (errorMsg && errorMsg.textContent.trim()) {
+        console.log('Showing error alert with message:', errorMsg.textContent);
         showAlertModal(errorMsg.textContent, 'error');
         errorMsg.remove();
     }

@@ -193,27 +193,15 @@ function convertToCrypto() {
 
 function handleDepositSubmit() {
     const amountInput = document.getElementById('amount');
-    const exchangeRate = parseFloat('{{ exchange_rate }}');
-    const cryptoPrices = {{ crypto_prices|safe }};
-    const selectedCrypto = document.getElementById('cryptocurrency').value;
-    
     const currencyAmount = parseFloat(amountInput.value);
-    
+
     if (!currencyAmount || currencyAmount <= 0) {
         alert('Please enter a valid amount');
         return false;
     }
-    
-    // Calculate final crypto amount
-    const usdAmount = currencyAmount / exchangeRate;
-    const cryptoPrice = parseFloat(cryptoPrices[selectedCrypto]);
-    const cryptoAmount = usdAmount / cryptoPrice;
-    
-    // Update the amount field to the crypto amount before submission
-    amountInput.value = cryptoAmount.toFixed(8);
-    
+
+    // Allow normal form submission; server will render alert divs
     return true;
-}
 }
 </script>
 {% endblock %}

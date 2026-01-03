@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load currency_filters %}
+
+{% block title %}Deposits - Tesla Investment Platform{% endblock %}
+
+{% block content %}
+<div class="space-y-8 px-4 md:px-0">
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Deposit Funds - TEST PAGE</h1>
+
+    <!-- FORCED TEST ALERT -->
+    <div id="alert-success-msg" style="display:none">✓ TEST ALERT - If you see this popup, the modal system is working correctly!</div>
+
+    <div style="padding: 20px; background: #fef2f2; border: 2px solid #dc2626; border-radius: 8px; margin: 20px 0;">
+        <h2 style="color: #dc2626; font-weight: bold;">Test Page</h2>
+        <p>This page has a forced alert div. If you don't see a popup when this page loads, the modal JavaScript isn't working.</p>
+    </div>
+
+</div>
+
+<script>
+// Direct inline test - bypass main.js
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== INLINE TEST SCRIPT RUNNING ===');
+    
+    const testDiv = document.getElementById('alert-success-msg');
+    console.log('Test div found:', testDiv);
+    console.log('Test div text:', testDiv ? testDiv.textContent : 'NOT FOUND');
+    
+    if (testDiv && testDiv.textContent.trim()) {
+        console.log('Calling showAlertModal...');
+        if (typeof showAlertModal === 'function') {
+            showAlertModal(testDiv.textContent, 'success');
+        } else {
+            console.error('showAlertModal function not found!');
+            alert('showAlertModal function is not defined - main.js not loaded?');
+        }
+    }
+});
+</script>
+{% endblock %}

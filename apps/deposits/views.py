@@ -151,7 +151,7 @@ def deposits_page(request):
             if currency_amount_decimal <= 0:
                 raise ValueError('Amount must be greater than 0.')
             
-            # Convert platform currency amount to USD for storage consistency
+            # Convert platform currency amount to USD (for crypto conversion only)
             usd_amount = currency_amount_decimal / exchange_rate
             
             # Convert USD to crypto amount
@@ -162,12 +162,12 @@ def deposits_page(request):
                 cryptocurrency
             )
             
-            # Create deposit with both amounts
+            # Create deposit using platform currency for currency_amount (so credit uses original currency value)
             deposit = Deposit.objects.create(
                 user=user,
                 cryptocurrency=cryptocurrency,
-                currency_amount=usd_amount,  # Store as USD for consistency
-                amount=crypto_amount,  # Store crypto amount
+                currency_amount=currency_amount_decimal,  # store the platform currency entered by user
+                amount=crypto_amount,  # store crypto amount
                 proof_type=proof_type,
                 proof_content=proof_content,
                 status='pending'
