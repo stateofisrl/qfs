@@ -2,6 +2,8 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     loadDashboardData();
+    // Auto-refresh dashboard data every 30 seconds
+    setInterval(loadDashboardData, 30000);
 });
 
 async function loadDashboardData() {
@@ -51,17 +53,53 @@ function displayBalance(user) {
     console.log('Earnings element:', earningsEl);
     
     if (balanceEl && user.balance !== undefined) {
-        const formattedBalance = '$' + parseFloat(user.balance).toFixed(2);
+        const newBalance = parseFloat(user.balance).toFixed(2);
+        const formattedBalance = '$' + newBalance;
         console.log('Setting balance to:', formattedBalance);
+        
+        // Add animation if value changed
+        if (balanceEl.textContent !== formattedBalance) {
+            balanceEl.style.transition = 'all 0.3s ease';
+            balanceEl.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                balanceEl.style.transform = 'scale(1)';
+            }, 300);
+        }
         balanceEl.textContent = formattedBalance;
     } else {
         console.warn('Balance element not found or user.balance is undefined');
     }
+    
     if (investedEl && user.total_invested !== undefined) {
-        investedEl.textContent = '$' + parseFloat(user.total_invested).toFixed(2);
+        const newInvested = parseFloat(user.total_invested).toFixed(2);
+        const formattedInvested = '$' + newInvested;
+        console.log('Setting total invested to:', formattedInvested);
+        
+        // Add animation if value changed
+        if (investedEl.textContent !== formattedInvested) {
+            investedEl.style.transition = 'all 0.3s ease';
+            investedEl.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                investedEl.style.transform = 'scale(1)';
+            }, 300);
+        }
+        investedEl.textContent = formattedInvested;
     }
+    
     if (earningsEl && user.total_earnings !== undefined) {
-        earningsEl.textContent = '$' + parseFloat(user.total_earnings).toFixed(2);
+        const newEarnings = parseFloat(user.total_earnings).toFixed(2);
+        const formattedEarnings = '$' + newEarnings;
+        console.log('Setting total earnings to:', formattedEarnings);
+        
+        // Add animation if value changed
+        if (earningsEl.textContent !== formattedEarnings) {
+            earningsEl.style.transition = 'all 0.3s ease';
+            earningsEl.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                earningsEl.style.transform = 'scale(1)';
+            }, 300);
+        }
+        earningsEl.textContent = formattedEarnings;
     }
 }
 
