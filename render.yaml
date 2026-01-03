@@ -12,6 +12,8 @@ services:
       # ============================================
       # AUTO-CONFIGURED (Don't need to set manually)
       # ============================================
+      - key: SECRET_KEY
+        value: "b!za!n!hvvk_ig7-y_ne^js!s7#ud19@7h!k3pxzqf3#t8dtph"
       - key: PYTHON_VERSION
         value: "3.12.0"
       - key: DEBUG
