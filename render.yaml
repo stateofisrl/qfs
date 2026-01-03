@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tesla-investment-platform
+    name: tesla-giveaway-platform
     env: python
     region: oregon
     plan: standard  # $7/month - 512 MB RAM
@@ -23,7 +23,7 @@ services:
       - key: CACHE_BACKEND
         value: "django.core.cache.backends.locmem.LocMemCache"
       - key: CACHE_LOCATION
-        value: "tesla-investment-cache"
+        value: "tesla-giveaway-cache"
       - key: SESSION_ENGINE
         value: "django.contrib.sessions.backends.db"
       
@@ -68,7 +68,7 @@ services:
       # Database (auto-linked from PostgreSQL service)
       - key: DATABASE_URL
         fromDatabase:
-          name: tesla-investment-db
+          name: tesla-giveaway-db
           property: connectionString
       
       # Gmail credentials (MUST set manually)
@@ -85,8 +85,8 @@ services:
         sync: false  # Your admin email
 
 databases:
-  - name: tesla-investment-db
-    databaseName: investment_platform
-    user: investment_user
+  - name: tesla-giveaway-db
+    databaseName: giveaway_platform
+    user: giveaway_user
     plan: standard  # $7/month - 256 MB RAM, 10 GB storage
     region: oregon
