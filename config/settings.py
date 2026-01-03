@@ -82,11 +82,12 @@ if os.environ.get('DATABASE_URL'):
             default=os.environ.get('DATABASE_URL'),
             conn_max_age=int(os.environ.get('CONN_MAX_AGE', 600)),
             conn_health_checks=True,
-            OPTIONS={
-                'connect_timeout': 10,
-                'options': '-c statement_timeout=30000'  # 30 second statement timeout
-            }
         )
+    }
+    # Add PostgreSQL-specific options after parsing
+    DATABASES['default']['OPTIONS'] = {
+        'connect_timeout': 10,
+        'options': '-c statement_timeout=30000'  # 30 second statement timeout
     }
 else:
     # Fallback to manual configuration (development)
