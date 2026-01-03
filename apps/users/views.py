@@ -323,13 +323,13 @@ def dashboard_view(request):
     # Account Summary statistics
     from django.db.models import Sum
     total_deposits = Deposit.objects.filter(user=user, status='approved').aggregate(
-        total=Sum('amount')
+        total=Sum('currency_amount')
     )['total'] or 0
     
     active_investments_count = active_investments.count()
     
     total_withdrawn = Withdrawal.objects.filter(user=user, status='completed').aggregate(
-        total=Sum('amount')
+        total=Sum('currency_amount')
     )['total'] or 0
     
     referral_earnings = CommissionTransaction.objects.filter(
