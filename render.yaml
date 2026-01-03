@@ -6,7 +6,7 @@ services:
     plan: starter
     branch: main
     buildCommand: "chmod +x build.sh && ./build.sh"
-    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --worker-class sync --timeout 60 --access-logfile - --error-logfile -"
+    startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --threads 2 --worker-class gthread --timeout 120 --keep-alive 5 --max-requests 1000 --max-requests-jitter 50 --access-logfile - --error-logfile -"
     autoDeploy: true
     envVars:
       # ============================================
