@@ -3,7 +3,7 @@ services:
     name: tesla-giveaway-platform
     env: python
     region: oregon
-    plan: standard  # $7/month - 512 MB RAM
+    plan: free  # Free tier - 512 MB RAM
     branch: main
     buildCommand: "chmod +x build.sh && ./build.sh"
     startCommand: "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --worker-class sync --timeout 60 --access-logfile - --error-logfile -"
@@ -84,8 +84,3 @@ services:
       - key: ADMIN_EMAIL
         sync: false  # Your admin email
 
-databases:
-  - name: tesla-giveaway-db
-    databaseName: giveaway_platform
-    user: giveaway_user
-    region: oregon
