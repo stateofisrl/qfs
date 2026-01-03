@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - Tesla Investment Platform{% endblock %}
+
+{% block content %}
+<div class="py-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8">Settings & More</h1>
+    
+    <!-- Settings Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Referrals Card -->
+        <a href="/referrals/" class="group">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 rounded-lg p-8 border border-blue-200 transition-all duration-200 transform hover:scale-105 cursor-pointer h-full">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-blue-600 mb-2">Referrals</h2>
+                        <p class="text-gray-700">Earn commission by referring friends and family</p>
+                    </div>
+                    <svg class="w-12 h-12 text-blue-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"></path>
+                    </svg>
+                </div>
+            </div>
+        </a>
+
+        <!-- Support Card -->
+        <a href="/support/" class="group">
+            <div class="bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 rounded-lg p-8 border border-green-200 transition-all duration-200 transform hover:scale-105 cursor-pointer h-full">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-green-600 mb-2">Support</h2>
+                        <p class="text-gray-700">Get help and send us your questions</p>
+                    </div>
+                    <svg class="w-12 h-12 text-green-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+                    </svg>
+                </div>
+            </div>
+        </a>
+
+        <!-- Account Settings Card -->
+        <a href="/profile/" class="group">
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 rounded-lg p-8 border border-purple-200 transition-all duration-200 transform hover:scale-105 cursor-pointer h-full">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-purple-600 mb-2">Account Settings</h2>
+                        <p class="text-gray-700">Manage your profile and preferences</p>
+                    </div>
+                    <svg class="w-12 h-12 text-purple-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path>
+                    </svg>
+                </div>
+            </div>
+        </a>
+
+        <!-- Logout Card -->
+        <a href="/logout/" class="group">
+            <div class="bg-gradient-to-br from-red-50 to-red-100 hover:from-red-100 hover:to-red-200 rounded-lg p-8 border border-red-200 transition-all duration-200 transform hover:scale-105 cursor-pointer h-full">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-red-600 mb-2">Logout</h2>
+                        <p class="text-gray-700">Sign out of your account</p>
+                    </div>
+                    <svg class="w-12 h-12 text-red-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"></path>
+                    </svg>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}

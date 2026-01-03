@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="{{ language_code }}" {% if site_language.is_rtl %}dir="rtl"{% endif %}>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tesla Investment Platform{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    {% block extra_css %}{% endblock %}
+    <style>
+        [x-cloak] { display: none !important; }
+        * {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        body {
+            @apply bg-white text-gray-900;
+        }
+        a {
+            @apply text-blue-600 hover:text-blue-700 transition-colors;
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900" x-data="{ settingsOpen: false }">
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:block bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-2xl font-bold text-gray-900">Tesla</a>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    {% if user.is_authenticated %}
+                        <a href="/dashboard/" class="text-gray-700 hover:text-gray-900 transition">Dashboard</a>
+                        <a href="/investments/" class="text-gray-700 hover:text-gray-900 transition">Investments</a>
+                        <a href="/deposits/" class="text-gray-700 hover:text-gray-900 transition">Deposits</a>
+                        <a href="/withdrawals/" class="text-gray-700 hover:text-gray-900 transition">Withdrawals</a>
+                        <a href="/referrals/" class="text-gray-700 hover:text-gray-900 transition">Referrals</a>
+                        <a href="/support/" class="text-gray-700 hover:text-gray-900 transition">Support</a>
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition focus:outline-none">
+                                <span>{{ user.email|truncatechars:20 }}</span>
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                            <div x-show="open" @click.outside="open = false" class="absolute right-0 mt-2 w-48 bg-white text-gray-900 rounded-lg shadow-xl z-50 border border-gray-200" style="display: none">
+                                <a href="/profile/" class="block px-4 py-2 text-sm text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-t-lg transition">Settings</a>
+                                <a href="/logout/" class="block px-4 py-2 text-sm text-red-600 hover:text-red-700 hover:bg-gray-100 rounded-b-lg transition">Logout</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="/login/" class="text-gray-700 hover:text-gray-900 transition">Login</a>
+                        <a href="/register/" class="bg-blue-600 text-gray-900 px-4 py-2 rounded-lg hover:bg-blue-700 transition font-bold">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="px-4 mt-4">
+            {% for message in messages %}
+                <div class="bg-{{ message.tags }}-100 border border-{{ message.tags }}-300 text-{{ message.tags }}-800 px-4 py-3 rounded">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="pt-8 md:pt-0 px-4 md:px-6 py-6 pb-24 max-w-7xl mx-auto">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Mobile Bottom Nav -->
+    {% if user.is_authenticated %}
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-blue-100 shadow-[0_-8px_20px_rgba(59,130,246,0.12)]">
+        <div class="grid grid-cols-5 gap-0">
+            <a href="/dashboard/" class="group flex flex-col items-center justify-center py-4 px-2 transition-all duration-200 hover:bg-blue-100 {% if request.resolver_match.url_name == 'dashboard' or 'dashboard' in request.path %}bg-blue-100 text-blue-600{% else %}text-gray-700 hover:text-blue-600{% endif %}">
+                <svg class="w-6 h-6 mb-1 transition-transform duration-200 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 11a1 1 0 100-2h-1a1 1 0 100 2h1zM18.243 15.657a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM12 18a1 1 0 01-1-1v-1a1 1 0 112 0v1a1 1 0 01-1 1zM7.757 15.657l-.707.707a1 1 0 001.414 1.414l.707-.707a1 1 0 00-1.414-1.414zM6 11a1 1 0 100-2H5a1 1 0 000 2h1zM5.757 8.343a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707z"></path>
+                </svg>
+                <span class="text-xs font-semibold">Home</span>
+            </a>
+            <a href="/deposits/" class="group flex flex-col items-center justify-center py-4 px-2 transition-all duration-200 hover:bg-green-100 {% if 'deposit' in request.path %}bg-green-100 text-green-600{% else %}text-gray-700 hover:text-green-600{% endif %}">
+                <svg class="w-6 h-6 mb-1 transition-transform duration-200 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                </svg>
+                <span class="text-xs font-semibold">Deposit</span>
+            </a>
+            <a href="/withdrawals/" class="group flex flex-col items-center justify-center py-4 px-2 transition-all duration-200 hover:bg-orange-100 {% if 'withdrawal' in request.path %}bg-orange-100 text-orange-600{% else %}text-gray-700 hover:text-orange-600{% endif %}">
+                <svg class="w-6 h-6 mb-1 transition-transform duration-200 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                </svg>
+                <span class="text-xs font-semibold">Withdraw</span>
+            </a>
+            <a href="/investments/" class="group flex flex-col items-center justify-center py-4 px-2 transition-all duration-200 hover:bg-purple-100 {% if 'investment' in request.path %}bg-purple-100 text-purple-600{% else %}text-gray-700 hover:text-purple-600{% endif %}">
+                <svg class="w-6 h-6 mb-1 transition-transform duration-200 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+                </svg>
+                <span class="text-xs font-semibold">Invest</span>
+            </a>
+            <a href="/settings/" class="group flex flex-col items-center justify-center py-4 px-2 transition-all duration-200 hover:bg-pink-100 text-gray-700 hover:text-pink-600">
+                <svg class="w-6 h-6 mb-1 transition-transform duration-200 group-hover:scale-110" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l1.72-1.35c.15-.12.19-.34.1-.51l-1.63-2.83c-.12-.22-.37-.29-.59-.22l-2.03.81c-.42-.32-.9-.6-1.44-.78l-.3-2.16c-.04-.24-.24-.41-.5-.41h-3.26c-.26 0-.46.17-.49.41l-.3 2.16c-.54.18-1.02.46-1.44.78l-2.03-.81c-.22-.09-.47 0-.59.22L2.74 8.87c-.09.17-.05.39.1.51l1.72 1.35c-.05.3-.07.62-.07.94s.02.64.07.94l-1.72 1.35c-.15.12-.19.34-.1.51l1.63 2.83c.12.22.37.29.59.22l2.03-.81c.42.32.9.6 1.44.78l.3 2.16c.03.24.23.41.49.41h3.26c.26 0 .46-.17.49-.41l.3-2.16c.54-.18 1.02-.46 1.44-.78l2.03.81c.22.09.47 0 .59-.22l1.63-2.83c.09-.17.05-.39-.1-.51l-1.72-1.35zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"></path>
+                </svg>
+                <span class="text-xs font-semibold">Settings</span>
+            </a>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="hidden md:block bg-gray-100 border-t border-gray-200 mt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p class="text-gray-600">&copy; {% now "Y" %} Tesla Inc. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
