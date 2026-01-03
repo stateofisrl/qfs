@@ -9,11 +9,11 @@
 
     <!-- Alert Messages (hidden, will trigger modal) -->
     {% if success %}
-    <div data-alert-success="{{ success }}" class="hidden"></div>
+    <div id="alert-success-msg" style="display:none">{{ success }}</div>
     {% endif %}
     
     {% if error %}
-    <div data-alert-error="{{ error }}" class="hidden"></div>
+    <div id="alert-error-msg" style="display:none">{{ error }}</div>
     {% endif %}
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

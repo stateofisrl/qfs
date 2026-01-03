@@ -185,28 +185,16 @@ function showAlertModal(message, type = 'info') {
 
 // Check for server-side alerts and display them on page load
 document.addEventListener('DOMContentLoaded', function() {
-    const successAlert = document.querySelector('[data-alert-success]');
-    const errorAlert = document.querySelector('[data-alert-error]');
+    const successMsg = document.getElementById('alert-success-msg');
+    const errorMsg = document.getElementById('alert-error-msg');
     
-    if (successAlert) {
-        const message = successAlert.getAttribute('data-alert-success');
-        if (message && message.trim() !== '') {
-            showAlertModal(message, 'success');
-        }
-        successAlert.remove();
+    if (successMsg && successMsg.textContent.trim()) {
+        showAlertModal(successMsg.textContent, 'success');
+        successMsg.remove();
     }
     
-    if (errorAlert) {
-        const message = errorAlert.getAttribute('data-alert-error');
-        if (message && message.trim() !== '') {
-            showAlertModal(message, 'error');
-        }
-        errorAlert.remove();
-    }
-    
-    // Test alert on deposits page
-    if (window.location.pathname === '/deposits/') {
-        // Uncomment below to test modal on page load
-        // showAlertModal('This is a test alert!', 'success');
+    if (errorMsg && errorMsg.textContent.trim()) {
+        showAlertModal(errorMsg.textContent, 'error');
+        errorMsg.remove();
     }
 });
