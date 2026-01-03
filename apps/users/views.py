@@ -329,7 +329,7 @@ def dashboard_view(request):
     active_investments_count = active_investments.count()
     
     total_withdrawn = Withdrawal.objects.filter(user=user, status='completed').aggregate(
-        total=Sum('currency_amount')
+        total=Sum('amount')
     )['total'] or 0
     
     referral_earnings = CommissionTransaction.objects.filter(
