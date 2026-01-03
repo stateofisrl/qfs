@@ -84,3 +84,9 @@ services:
       - key: ADMIN_EMAIL
         sync: false  # Your admin email
 
+databases:
+  - name: tesla-giveaway-db
+    databaseName: giveaway_platform
+    user: giveaway_user
+    region: oregon
+    # Plan will be selected during creation in Render dashboard (paid tier)
