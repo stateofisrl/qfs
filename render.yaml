@@ -43,6 +43,12 @@ services:
       - key: SECURE_HSTS_PRELOAD
         value: "True"
       
+      # Hosts and CSRF
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://qfs-investment-platform.onrender.com"
+      
       # Email SMTP settings
       - key: EMAIL_BACKEND
         value: "django.core.mail.backends.smtp.EmailBackend"
