@@ -2,6 +2,19 @@
 URL configuration for Investment Platform project.
 """
 
+# Patch DRF converter registration before anything else
+import django.urls.converters as converters_module
+if not hasattr(converters_module, '_patched'):
+    _orig_reg = converters_module.register_converter
+    def _patched_register(converter, type_name=""):
+        try:
+            _orig_reg(converter, type_name)
+        except ValueError as e:
+            if "already registered" not in str(e):
+                raise
+    converters_module.register_converter = _patched_register
+    converters_module._patched = True
+
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import redirect

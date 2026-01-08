@@ -3,6 +3,26 @@
 import os
 import sys
 
+# Patch Django converter registration BEFORE Django is imported
+def _patch_converters():
+    try:
+        import django.urls.converters as conv
+        if hasattr(conv, '_patched'):
+            return
+        _orig = conv.register_converter
+        def _new_reg(converter, type_name=""):
+            try:
+                _orig(converter, type_name)
+            except ValueError as e:
+                if "already registered" not in str(e):
+                    raise
+        conv.register_converter = _new_reg
+        conv._patched = True
+    except:
+        pass
+
+_patch_converters()
+
 
 def main():
     """Run administrative tasks."""

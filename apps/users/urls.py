@@ -3,10 +3,10 @@ User URLs.
 """
 
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 from .views import UserViewSet
 
-router = DefaultRouter()
+router = SimpleRouter()
 router.register(r'', UserViewSet, basename='user')
 
 urlpatterns = [

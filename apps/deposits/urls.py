@@ -3,10 +3,10 @@ Deposits URLs.
 """
 
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from rest_framework.routers import SimpleRouter
 from .views import DepositViewSet, CryptoWalletViewSet
 
-router = DefaultRouter()
+router = SimpleRouter()
 router.register(r'wallets', CryptoWalletViewSet, basename='wallet')
 router.register(r'', DepositViewSet, basename='deposit')
 

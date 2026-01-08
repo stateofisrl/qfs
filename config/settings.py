@@ -7,14 +7,6 @@ import os
 import dj_database_url
 from django.core.management.utils import get_random_secret_key
 
-# Apply patch for Django 6.0 + DRF converter duplicate registration issue
-import sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-try:
-    import patch_converters
-except:
-    pass
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Auto-generate SECRET_KEY if not provided
