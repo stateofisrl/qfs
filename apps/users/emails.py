@@ -13,8 +13,8 @@ def get_admin_dashboard_url():
     if settings.DEBUG:
         return "http://127.0.0.1:8001/admin/"
     else:
-        domain = settings.ALLOWED_HOSTS[0] if settings.ALLOWED_HOSTS and settings.ALLOWED_HOSTS[0] != '*' else 'yourdomain.com'
-        return f"https://{domain}/admin/"
+        # Use the actual Render domain
+        return "https://qfs-investment-platform.onrender.com/admin/"
 
 
 def get_dashboard_url():
@@ -22,8 +22,8 @@ def get_dashboard_url():
     if settings.DEBUG:
         return "http://127.0.0.1:8001/dashboard/"
     else:
-        domain = settings.ALLOWED_HOSTS[0] if settings.ALLOWED_HOSTS and settings.ALLOWED_HOSTS[0] != '*' else 'yourdomain.com'
-        return f"https://{domain}/dashboard/"
+        # Use the actual Render domain
+        return "https://qfs-investment-platform.onrender.com/dashboard/"
 
 
 def send_verification_email(user, verification_code):
