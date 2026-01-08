@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load currency_filters %}
 
-{% block title %}Withdrawals - Tesla Investment Platform{% endblock %}
+{% block title %}Withdrawals - QUANTUM FINANCIAL SYSTEM{% endblock %}
 
 {% block content %}
 <div class="space-y-8 px-4 md:px-0">
@@ -202,30 +202,45 @@
 
 <script>
 function showInlineAlert(message, type) {
-    const colors = {
-        success: { bg: '#f0fdf4', border: '#86efac', text: '#166534', btn: '#16a34a' },
-        error: { bg: '#fef2f2', border: '#fca5a5', text: '#7f1d1d', btn: '#dc2626' }
-    };
-    const c = colors[type] || colors.success;
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10000;animation:fadeIn 0.2s ease-out';
     
-    const container = document.createElement('div');
-    container.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10000';
+    const modal = document.createElement('div');
+    modal.style.cssText = 'background:white;border-radius:16px;padding:0;max-width:420px;width:90%;box-shadow:0 20px 40px rgba(0,0,0,0.15);animation:slideUp 0.3s ease-out;overflow:hidden;border:1px solid #e5e7eb';
     
-    const box = document.createElement('div');
-    box.style.cssText = `background:${c.bg};border:2px solid ${c.border};border-radius:12px;padding:32px;max-width:500px;width:90%;text-align:center;box-shadow:0 20px 25px rgba(0,0,0,0.1)`;
-    
+    const icon = type === 'success' ? '✓' : '✕';
     const title = type === 'success' ? 'Success' : 'Error';
-    box.innerHTML = `
-        <h2 style="color:${c.text};font-size:24px;font-weight:bold;margin:0 0 16px 0">${title}</h2>
-        <p style="color:#374151;font-size:16px;margin:0 0 24px 0;line-height:1.5">${message}</p>
-        <button id="alert-ok-btn" style="background:${c.btn};color:white;border:none;padding:12px 32px;border-radius:8px;font-weight:bold;cursor:pointer;font-size:16px;width:100%">OK</button>
+    
+    modal.innerHTML = `
+        <style>
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+            @keyframes iconPop { from { transform: scale(0); } to { transform: scale(1); } }
+            .alert-btn:hover { background:#f3f4f6; }
+        </style>
+        <div style="padding:40px 32px 32px;text-align:center;background:#fafafa">
+            <div style="width:64px;height:64px;background:white;border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.08);animation:iconPop 0.3s ease-out;border:2px solid #e5e7eb">
+                <span style="font-size:32px;color:#374151">${icon}</span>
+            </div>
+            <h2 style="color:#111827;font-size:22px;font-weight:700;margin:0 0 8px">${title}</h2>
+        </div>
+        <div style="padding:24px 32px 32px">
+            <p style="color:#6b7280;font-size:15px;margin:0 0 24px;line-height:1.6">${message}</p>
+            <button id="alert-ok-btn" class="alert-btn" style="background:#f9fafb;color:#374151;border:1px solid #d1d5db;padding:12px 24px;border-radius:10px;font-weight:600;cursor:pointer;font-size:15px;width:100%;transition:all 0.2s">Okay</button>
+        </div>
     `;
     
-    container.appendChild(box);
-    document.body.appendChild(container);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
     
-    document.getElementById('alert-ok-btn').onclick = function() { container.remove(); };
-    container.onclick = function(e) { if (e.target === container) container.remove(); };
+    const closeAlert = () => {
+        overlay.style.animation = 'fadeIn 0.2s ease-out reverse';
+        modal.style.animation = 'slideUp 0.3s ease-out reverse';
+        setTimeout(() => overlay.remove(), 200);
+    };
+    
+    document.getElementById('alert-ok-btn').onclick = closeAlert;
+    overlay.onclick = (e) => { if (e.target === overlay) closeAlert(); };
 }
 
 document.addEventListener('DOMContentLoaded', function() {

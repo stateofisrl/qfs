@@ -1,7 +1,7 @@
 {
-  "name": "Tesla Investment Platform",
-  "short_name": "Tesla Invest",
-  "description": "Invest in your future with Tesla Investment Platform",
+  "name": "QUANTUM FINANCIAL SYSTEM",
+  "short_name": "QFS",
+  "description": "Invest in your future with QUANTUM FINANCIAL SYSTEM",
   "start_url": "/dashboard/",
   "scope": "/",
   "display": "fullscreen",

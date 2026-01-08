@@ -7,35 +7,38 @@ import os
 # Ensure directories exist
 os.makedirs('static/images', exist_ok=True)
 
-# Tesla brand color (dark background with white logo outline)
-background_color = (0, 0, 0)  # Black background for Tesla logo
-logo_color = (255, 255, 255)  # White logo
+# Light blue Q on white background
+background_color = (255, 255, 255)  # White background
+logo_color = (135, 206, 250)  # Light blue Q
 
-# Create favicon sizes from scratch with Tesla "T" logo
+# Create favicon sizes with letter "Q"
 def create_favicon(size, filename):
     img = Image.new('RGB', (size, size), background_color)
     draw = ImageDraw.Draw(img)
     
-    # Draw simple Tesla "T" shape
-    # Calculate proportions based on size
-    margin = size // 8
-    t_width = size - (2 * margin)
-    t_height = size - (2 * margin)
+    # Try to use a nice font, fallback to default
+    try:
+        # Use Arial Bold or fallback to default
+        font_size = int(size * 0.7)
+        font = ImageFont.truetype("arial.ttf", font_size)
+    except:
+        # Use default font for small sizes
+        font = ImageFont.load_default()
     
-    # Top bar of T (wider)
-    top_bar_height = t_height // 5
-    draw.rectangle(
-        [(margin, margin), (margin + t_width, margin + top_bar_height)],
-        fill=logo_color
-    )
+    # Draw letter "Q" centered
+    text = "Q"
     
-    # Vertical stem of T (centered)
-    stem_width = t_width // 3
-    stem_x = margin + (t_width - stem_width) // 2
-    draw.rectangle(
-        [(stem_x, margin), (stem_x + stem_width, margin + t_height)],
-        fill=logo_color
-    )
+    # For better centering, calculate text bbox
+    try:
+        bbox = draw.textbbox((0, 0), text, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+        x = (size - text_width) // 2 - bbox[0]
+        y = (size - text_height) // 2 - bbox[1]
+        draw.text((x, y), text, fill=logo_color, font=font)
+    except:
+        # Fallback for older PIL versions
+        draw.text((size // 4, size // 8), text, fill=logo_color, font=font)
     
     img.save(filename, 'PNG')
     print(f'✅ Created {filename}')

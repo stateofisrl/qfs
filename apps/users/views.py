@@ -552,6 +552,14 @@ def login_page(request):
 
     user = authenticate(request, username=email, password=password)
     if user is not None:
+        # Check if user is verified
+        if not user.is_verified:
+            # Store email in session and redirect to verification
+            request.session['verification_email'] = user.email
+            return render(request, 'login.html', {
+                'error': 'Your account is not verified. Please check your email for the verification code.',
+                'redirect_to_verify': True
+            })
         django_login(request, user)
         return redirect('dashboard')
 
@@ -571,10 +579,11 @@ def register_page(request):
     username = request.POST.get('username')
     first_name = request.POST.get('first_name')
     last_name = request.POST.get('last_name')
+    phone_number = request.POST.get('phone_number')
     password = request.POST.get('password')
     password2 = request.POST.get('password2')
 
-    if not all([email, username, first_name, last_name, password, password2]):
+    if not all([email, username, first_name, last_name, phone_number, password, password2]):
         return render(request, 'register.html', {'error': 'All fields are required.'})
 
     if password != password2:
@@ -590,13 +599,30 @@ def register_page(request):
         return render(request, 'register.html', {'error': 'Username already taken.'})
 
     try:
+        import random
+        # Generate 6-digit verification code
+        verification_code = str(random.randint(100000, 999999))
+        
         user = User.objects.create_user(
             email=email,
             username=email,  # Use email as username for authentication
             first_name=first_name,
             last_name=last_name,
-            password=password
+            phone_number=phone_number,
+            password=password,
+            is_verified=False,
+            verification_code=verification_code
         )
+        
+        # Send verification email (don't crash if email fails)
+        try:
+            from .emails import send_verification_email
+            send_verification_email(user, verification_code)
+            print(f"[REGISTRATION] Verification email sent to {user.email}")
+        except Exception as email_error:
+            print(f"[REGISTRATION] Failed to send verification email: {email_error}")
+            # Continue with registration even if email fails
+        
         # Handle referral code if provided (from form or URL param)
         referral_code = request.POST.get('referral_code') or request.GET.get('ref')
         if referral_code:
@@ -641,8 +667,9 @@ def register_page(request):
                         print(f"[REGISTRATION] Applied welcome bonus of ${bonus_amount} to {user.email}")
             except User.DoesNotExist:
                 pass
-        django_login(request, user)
-        return redirect('dashboard')
+        # Store email in session for verification page
+        request.session['verification_email'] = user.email
+        return redirect('verify_account')
     except Exception as e:
         return render(request, 'register.html', {'error': f'Registration failed: {str(e)}'})
 
@@ -659,6 +686,95 @@ def logout_view(request):
     finally:
         django_logout(request)
     return redirect('login')
+
+
+def verify_account_page(request):
+    """Render verification page and handle verification code submission."""
+    if request.method == 'GET':
+        # Get email from session
+        email = request.session.get('verification_email')
+        if not email:
+            return redirect('login')
+        return render(request, 'verify_account.html', {'email': email})
+    
+    # POST: verify code
+    verification_code = request.POST.get('verification_code')
+    email = request.session.get('verification_email')
+    
+    if not email:
+        return render(request, 'verify_account.html', {'error': 'Session expired. Please register again.'})
+    
+    if not verification_code or len(verification_code) != 6:
+        return render(request, 'verify_account.html', {
+            'error': 'Please enter a valid 6-digit code.',
+            'email': email
+        })
+    
+    try:
+        user = User.objects.get(email=email)
+        
+        if user.is_verified:
+            # Already verified, just log them in
+            django_login(request, user)
+            return redirect('dashboard')
+        
+        if user.verification_code == verification_code:
+            # Correct code - verify user
+            user.is_verified = True
+            user.verification_code = None  # Clear code after verification
+            user.save(update_fields=['is_verified', 'verification_code'])
+            
+            # Log them in
+            django_login(request, user)
+            
+            # Clear session
+            if 'verification_email' in request.session:
+                del request.session['verification_email']
+            
+            return redirect('dashboard')
+        else:
+            return render(request, 'verify_account.html', {
+                'error': 'Invalid verification code. Please try again.',
+                'email': email
+            })
+    except User.DoesNotExist:
+        return render(request, 'verify_account.html', {
+            'error': 'User not found. Please register again.',
+            'email': email
+        })
+
+
+def resend_verification_page(request):
+    """Resend verification code to user's email."""
+    email = request.session.get('verification_email')
+    
+    if not email:
+        return redirect('login')
+    
+    try:
+        import random
+        user = User.objects.get(email=email)
+        
+        # Generate new verification code
+        verification_code = str(random.randint(100000, 999999))
+        user.verification_code = verification_code
+        user.save(update_fields=['verification_code'])
+        
+        # Send verification email
+        try:
+            from .emails import send_verification_email
+            send_verification_email(user, verification_code)
+            message = 'Verification code sent! Check your email.'
+        except Exception as email_error:
+            print(f"[RESEND] Failed to send verification email: {email_error}")
+            message = f'Verification code generated: {verification_code} (Email sending failed - check console)'
+        
+        return render(request, 'verify_account.html', {
+            'success': message,
+            'email': email
+        })
+    except User.DoesNotExist:
+        return redirect('register')
 
 
 def dev_login_as(request):

@@ -18,6 +18,10 @@ app.conf.beat_schedule = {
         'task': 'apps.users.tasks.update_crypto_and_exchange_rates',
         'schedule': crontab(minute=0),  # Run every hour at :00 minutes
     },
+    'verify-deposits-every-5-minutes': {
+        'task': 'apps.deposits.tasks.auto_verify_deposits',
+        'schedule': crontab(minute='*/5'),  # Run every 5 minutes
+    },
 }
 
 app.conf.timezone = 'America/New_York'

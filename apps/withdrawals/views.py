@@ -170,7 +170,7 @@ def withdrawals_page(request):
                         }
                         return render(request, 'withdrawals.html', context)
             
-            # Create withdrawal
+            # Create withdrawal and deduct balance immediately
             withdrawal = Withdrawal.objects.create(
                 user=user,
                 amount=amount,
@@ -179,14 +179,15 @@ def withdrawals_page(request):
                 status='pending'
             )
             
-                # NOTE: Balance is deducted when admin approves the withdrawal, not when created
-                # This prevents double-deduction and allows proper validation
+            # Deduct balance immediately when withdrawal is requested
+            user.balance -= amount
+            user.save()
             
             context = {
                 'withdrawals': Withdrawal.objects.filter(user=user).order_by('-created_at')[:3],
                 'balance': user.balance,
                 'currency_symbol': currency_symbol,
-                'success': 'Withdrawal request submitted successfully!',
+                'success': 'Withdrawal request submitted successfully! Amount has been deducted from your balance.',
             }
             return render(request, 'withdrawals.html', context)
         except ValueError as e:

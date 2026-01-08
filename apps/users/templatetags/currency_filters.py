@@ -3,7 +3,7 @@ Custom template filters for currency conversion.
 """
 
 from django import template
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 register = template.Library()
 

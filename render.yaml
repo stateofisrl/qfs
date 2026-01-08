@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: tesla-giveaway-platform
+    name: qfs-investment-platform
     env: python
     region: oregon
     plan: starter
@@ -52,15 +52,23 @@ services:
         value: "587"
       - key: EMAIL_USE_TLS
         value: "True"
+      - key: EMAIL_HOST_USER
+        value: "aegiscyberops@gmail.com"
+      - key: EMAIL_HOST_PASSWORD
+        generateValue: true  # Set this manually in Render dashboard
+      - key: DEFAULT_FROM_EMAIL
+        value: "aegiscyberops@gmail.com"
+      - key: ADMIN_EMAIL
+        value: "aegiscyberops@gmail.com"
       
       # Database (auto-linked from PostgreSQL service)
       - key: DATABASE_URL
         fromDatabase:
-          name: tesla-giveaway-db
+          name: qfs-investment-db
           property: connectionString
 
 databases:
-  - name: tesla-giveaway-db
-    databaseName: giveaway_platform
-    user: giveaway_user
+  - name: qfs-investment-db
+    databaseName: qfs_platform
+    user: qfs_user
     region: oregon

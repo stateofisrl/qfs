@@ -7,6 +7,14 @@ import os
 import dj_database_url
 from django.core.management.utils import get_random_secret_key
 
+# Apply patch for Django 6.0 + DRF converter duplicate registration issue
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+try:
+    import patch_converters
+except:
+    pass
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Auto-generate SECRET_KEY if not provided
@@ -161,6 +169,11 @@ CORS_ALLOW_CREDENTIALS = True
 # Security settings
 CSRF_COOKIE_SECURE = os.environ.get('CSRF_COOKIE_SECURE', 'False') == 'True'
 SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False') == 'True'
+
+# Session settings - use database sessions to persist across server restarts
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_SAVE_EVERY_REQUEST = True
 SECURE_SSL_REDIRECT = os.environ.get('SECURE_SSL_REDIRECT', 'False') == 'True'
 SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', 0))
 SECURE_HSTS_INCLUDE_SUBDOMAINS = os.environ.get('SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True'
@@ -199,15 +212,18 @@ CACHES = {
 }
 
 # Email settings
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Temporary: Use console backend if SMTP is blocked by firewall
+# Change back to 'django.core.mail.backends.smtp.EmailBackend' for production
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False') == 'True'
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', '')
-ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', '')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'aegiscyberops@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'bcummthtwkgqlfux')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'aegiscyberops@gmail.com')
+ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'aegiscyberops@gmail.com')
 EMAIL_TIMEOUT = 30
 
 

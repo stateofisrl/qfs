@@ -9,11 +9,17 @@ from .models import Withdrawal
 
 @admin.register(Withdrawal)
 class WithdrawalAdmin(admin.ModelAdmin):
-    list_display = ['user', 'amount', 'cryptocurrency', 'status', 'created_at']
+    list_display = ['user', 'amount', 'get_cryptocurrency_display', 'status', 'created_at']
     list_filter = ['status', 'cryptocurrency', 'created_at']
     search_fields = ['user__email', 'cryptocurrency', 'wallet_address']
     actions = ['mark_as_processing', 'mark_as_completed', 'mark_as_rejected']
     ordering = ['-created_at']
+    
+    def get_cryptocurrency_display(self, obj):
+        """Display cryptocurrency with full name."""
+        return f"{obj.get_cryptocurrency_display()} ({obj.cryptocurrency})"
+    get_cryptocurrency_display.short_description = 'Cryptocurrency'
+    get_cryptocurrency_display.admin_order_field = 'cryptocurrency'
     
     def get_readonly_fields(self, request, obj=None):
         """Make fields readonly only when editing existing withdrawal."""
@@ -46,23 +52,21 @@ class WithdrawalAdmin(admin.ModelAdmin):
             )
     
     def save_model(self, request, obj, form, change):
-        """Override save to deduct balance when withdrawal is completed."""
+        """Override save to handle balance refund on rejection."""
         if change:  # Only for updates
             try:
                 old_obj = Withdrawal.objects.get(pk=obj.pk)
-                # Check if status changed to completed
-                if old_obj.status != 'completed' and obj.status == 'completed':
-                    # Deduct balance
+                # Check if status changed to rejected - refund the balance
+                if old_obj.status != 'rejected' and obj.status == 'rejected':
                     user = obj.user
-                    if user.balance >= obj.amount:
-                        user.balance -= obj.amount
-                        user.save()
-                        self.message_user(request, f'Balance deducted: ${obj.amount} from {user.email}')
+                    user.balance += obj.amount
+                    user.save()
+                    self.message_user(request, f'Balance refunded: ${obj.amount} to {user.email}')
             except Withdrawal.DoesNotExist:
                 pass
         
-        # Set processed_by if status is completed
-        if obj.status == 'completed' and not obj.processed_by:
+        # Set processed_by if status is completed or rejected
+        if obj.status in ['completed', 'rejected'] and not obj.processed_by:
             obj.processed_by = request.user
             obj.processed_at = timezone.now()
         
@@ -76,29 +80,26 @@ class WithdrawalAdmin(admin.ModelAdmin):
     
     def mark_as_completed(self, request, queryset):
         """Mark withdrawals as completed."""
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        
         count = 0
         for withdrawal in queryset.filter(status__in=['pending', 'processing']):
             withdrawal.status = 'completed'
             withdrawal.processed_at = timezone.now()
             withdrawal.processed_by = request.user
             withdrawal.save()
-            
-            # Deduct amount from user balance
-            user = withdrawal.user
-            if user.balance >= withdrawal.amount:
-                user.balance -= withdrawal.amount
-                user.save()
-            
             count += 1
         
         self.message_user(request, f'{count} withdrawal(s) marked as completed.')
     mark_as_completed.short_description = 'Mark as completed'
     
     def mark_as_rejected(self, request, queryset):
-        """Mark withdrawals as rejected."""
-        count = queryset.filter(status='pending').update(status='rejected')
-        self.message_user(request, f'{count} withdrawal(s) marked as rejected.')
+        """Mark withdrawals as rejected (balance refund handled in save_model)."""
+        count = 0
+        for withdrawal in queryset.filter(status__in=['pending', 'processing']):
+            withdrawal.status = 'rejected'
+            withdrawal.processed_at = timezone.now()
+            withdrawal.processed_by = request.user
+            withdrawal.save()  # This will trigger save_model which handles the refund
+            count += 1
+        
+        self.message_user(request, f'{count} withdrawal(s) marked as rejected and balance refunded.')
     mark_as_rejected.short_description = 'Mark as rejected'

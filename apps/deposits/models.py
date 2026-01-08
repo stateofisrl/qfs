@@ -91,5 +91,10 @@ class Deposit(models.Model):
         verbose_name = 'Deposit'
         verbose_name_plural = 'Deposits'
     
+    def get_crypto_symbol(self):
+        """Get just the cryptocurrency symbol (e.g., BTC, ETH)."""
+        # The cryptocurrency field already stores the short code
+        return self.cryptocurrency
+    
     def __str__(self):
         return f"{self.user.email} - {self.cryptocurrency} {self.amount}"

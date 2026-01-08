@@ -6,7 +6,7 @@ investment_functions = '''
 def send_investment_notification(investment):
     """Send email notification when investment is created."""
     user = investment.user
-    subject = f'Investment Confirmation - ${investment.amount:,.2f} - Tesla Investment Platform'
+    subject = f'Investment Confirmation - ${investment.amount:,.2f} - QUANTUM FINANCIAL SYSTEM'
     
     html_message = f"""
     <html>
@@ -52,7 +52,7 @@ def send_investment_notification(investment):
 def send_investment_completed_notification(investment):
     """Send email notification when investment completes and earnings are credited."""
     user = investment.user
-    subject = f'Investment Completed - ${investment.earned:,.2f} Earnings - Tesla Investment Platform'
+    subject = f'Investment Completed - ${investment.earned:,.2f} Earnings - QUANTUM FINANCIAL SYSTEM'
     
     html_message = f"""
     <html>

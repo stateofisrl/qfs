@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from apps.users.views import (
     login_page, dashboard_view, logout_view, dev_login_as, register_page,
     transactions_page, transactions_export, settings_page,
+    verify_account_page, resend_verification_page,
 )
 from apps.investments.views import investments_page
 from apps.deposits.views import deposits_page
@@ -45,6 +46,8 @@ urlpatterns = [
     # Dev helper: quickly create a session for a user (DEBUG only)
     path('dev/login-as/', dev_login_as, name='dev-login-as'),
     path('register/', register_page, name='register'),
+    path('verify-account/', verify_account_page, name='verify_account'),
+    path('resend-verification/', resend_verification_page, name='resend_verification'),
     path('forgot-password/', TemplateView.as_view(template_name='forgot_password.html'), name='forgot-password'),
     path('reset-password/<str:uid>/<str:token>/', TemplateView.as_view(template_name='reset_password.html'), name='reset-password'),
     path('profile/', TemplateView.as_view(template_name='profile.html'), name='profile'),

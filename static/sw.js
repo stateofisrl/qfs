@@ -1,5 +1,5 @@
-// Service Worker for Tesla Investment Platform PWA
-const CACHE_NAME = 'tesla-invest-v1';
+// Service Worker for QUANTUM FINANCIAL SYSTEM PWA
+const CACHE_NAME = 'qfs-invest-v1';
 const urlsToCache = [
   '/dashboard/',
   '/deposits/',

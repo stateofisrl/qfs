@@ -138,9 +138,19 @@ def deposits_page(request):
         cryptocurrency = request.POST.get('cryptocurrency')
         proof_type = request.POST.get('proof_type')
         proof_content = request.POST.get('proof_content')
+        proof_image = request.FILES.get('proof_image')
         
-        if not cryptocurrency or not currency_amount or not proof_type or not proof_content:
+        # Validate required fields based on proof type
+        if not cryptocurrency or not currency_amount or not proof_type:
             context_data['error'] = 'All fields are required.'
+            return render(request, 'deposits.html', context_data)
+        
+        # Validate proof based on type
+        if proof_type == 'screenshot' and not proof_image:
+            context_data['error'] = 'Please upload a screenshot.'
+            return render(request, 'deposits.html', context_data)
+        elif proof_type != 'screenshot' and not proof_content:
+            context_data['error'] = 'Please provide proof content.'
             return render(request, 'deposits.html', context_data)
         
         try:
@@ -169,7 +179,8 @@ def deposits_page(request):
                 currency_amount=currency_amount_decimal,  # store the platform currency entered by user
                 amount=crypto_amount,  # store crypto amount
                 proof_type=proof_type,
-                proof_content=proof_content,
+                proof_content=proof_content if proof_type != 'screenshot' else '',
+                proof_image=proof_image if proof_type == 'screenshot' else None,
                 status='pending'
             )
             
