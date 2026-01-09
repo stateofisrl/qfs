@@ -246,9 +246,12 @@ def send_admin_deposit_notification(deposit):
                 <p style="color: #666; margin: 5px 0;">Deposit Amount: <strong style="color: #4ade80;">{amount_display}</strong></p>
                 <p style="color: #666; margin: 5px 0;">Cryptocurrency Received: <strong style="color: #333;">{deposit.amount:.8f} {deposit.cryptocurrency}</strong></p>
                 <p style="color: #666; margin: 5px 0;">Proof Type: <strong style="color: #333;">{deposit.get_proof_type_display()}</strong></p>
+                {"<p style='color: #666; margin: 5px 0;'>Transaction ID: <strong style='color: #333;'>" + deposit.proof_content + "</strong></p>" if deposit.proof_type == 'transaction_id' else ""}
+                {"<p style='color: #666; margin: 5px 0;'>Note: <strong style='color: #333;'>" + deposit.proof_content + "</strong></p>" if deposit.proof_type == 'note' else ""}
                 <p style="color: #666; margin: 5px 0;">Status: <strong style="color: #d97706;">Pending</strong></p>
                 <p style="color: #666; margin: 5px 0;">Date: <strong style="color: #333;">{deposit.created_at.strftime('%B %d, %Y at %I:%M %p')}</strong></p>
             </div>
+            {"<div style='margin: 20px 0; padding: 20px; background-color: #f9f9f9; border-radius: 6px;'><p style='color: #666; margin-bottom: 10px;'><strong>Payment Screenshot:</strong></p><img src='https://qfs-investment-platform.onrender.com" + deposit.proof_image.url + "' style='max-width: 100%; height: auto; border-radius: 4px; border: 1px solid #ddd;' /></div>" if deposit.proof_image else ""}
             <div style="text-align: center; margin: 30px 0;">
                 <a href="{admin_url}deposits/deposit/{deposit.pk}/change/" style="background-color: #d97706; color: #000; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
                     Review Deposit
