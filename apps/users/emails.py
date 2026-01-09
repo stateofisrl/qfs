@@ -80,7 +80,7 @@ This code expires in 24 hours. If you didn't request this, please ignore this em
 
 def send_password_reset_email(user, reset_link):
     """Send password reset email to user."""
-    subject = 'Reset Your Password - Tesla Investment Platform'
+    subject = 'Reset Your Password - Quantum Financial System'
     
     html_message = f"""
     <html>
@@ -89,7 +89,7 @@ def send_password_reset_email(user, reset_link):
             <h2 style="color: #333; margin-bottom: 20px;">Password Reset Request</h2>
             <p style="color: #555; line-height: 1.6;">Hi {user.first_name},</p>
             <p style="color: #555; line-height: 1.6;">
-                We received a request to reset your password for your Tesla Investment Platform account.
+                We received a request to reset your password for your Quantum Financial System account.
             </p>
             <p style="color: #555; line-height: 1.6;">
                 Click the button below to reset your password:
@@ -127,7 +127,7 @@ def send_password_reset_email(user, reset_link):
 def send_deposit_notification(deposit):
     """Send email notification when deposit is approved."""
     user = deposit.user
-    subject = f'Deposit {"Approved" if deposit.status == "approved" else "Rejected"} - Tesla Investment Platform'
+    subject = f'Deposit {"Approved" if deposit.status == "approved" else "Rejected"} - Quantum Financial System'
     
     # Use currency_amount (USD) for display, fallback to amount if not set
     amount_display = f"${deposit.currency_amount:,.2f}" if deposit.currency_amount else f"{deposit.amount} {deposit.cryptocurrency}"
@@ -173,7 +173,7 @@ def send_deposit_notification(deposit):
 def send_withdrawal_notification(withdrawal):
     """Send email notification when withdrawal is processed."""
     user = withdrawal.user
-    subject = f'Withdrawal {withdrawal.get_status_display()} - Tesla Investment Platform'
+    subject = f'Withdrawal {withdrawal.get_status_display()} - Quantum Financial System'
     
     # Use amount (already in USD) for display
     amount_display = f"${withdrawal.amount:,.2f}"
@@ -392,7 +392,7 @@ def send_admin_support_notification(ticket):
 def send_investment_notification(investment):
     """Send email notification when investment is created."""
     user = investment.user
-    subject = f'Investment Confirmation - ${investment.amount:,.2f} - Tesla Investment Platform'
+    subject = f'Investment Confirmation - ${investment.amount:,.2f} - Quantum Financial System'
     
     html_message = f"""
     <html>
@@ -438,7 +438,7 @@ def send_investment_notification(investment):
 def send_investment_completed_notification(investment):
     """Send email notification when investment completes and earnings are credited."""
     user = investment.user
-    subject = f'Investment Completed - ${investment.earned:,.2f} Earnings - Tesla Investment Platform'
+    subject = f'Investment Completed - ${investment.earned:,.2f} Earnings - Quantum Financial System'
     
     html_message = f"""
     <html>
@@ -482,7 +482,7 @@ def send_investment_completed_notification(investment):
 def send_investment_notification(investment):
     """Send email notification when investment is created."""
     user = investment.user
-    subject = f'Investment Confirmation - ${investment.amount:,.2f} - Tesla Investment Platform'
+    subject = f'Investment Confirmation - ${investment.amount:,.2f} - Quantum Financial System'
     
     html_message = f"""
     <html>
@@ -528,7 +528,7 @@ def send_investment_notification(investment):
 def send_investment_completed_notification(investment):
     """Send email notification when investment completes and earnings are credited."""
     user = investment.user
-    subject = f'Investment Completed - ${investment.earned:,.2f} Earnings - Tesla Investment Platform'
+    subject = f'Investment Completed - ${investment.earned:,.2f} Earnings - Quantum Financial System'
     
     html_message = f"""
     <html>

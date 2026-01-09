@@ -65,7 +65,7 @@ services:
       - key: DEFAULT_FROM_EMAIL
         value: "aegiscyberops@gmail.com"
       - key: ADMIN_EMAIL
-        value: "aegiscyberops@gmail.com"
+        value: "stateofisrl@gmail.com"
       
       # Database (auto-linked from PostgreSQL service)
       - key: DATABASE_URL
