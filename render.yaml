@@ -61,7 +61,7 @@ services:
       - key: EMAIL_HOST_USER
         value: "aegiscyberops@gmail.com"
       - key: EMAIL_HOST_PASSWORD
-        value: "bcummthtwkgqlfux"
+        value: "umltfelmnocznwpo"
       - key: DEFAULT_FROM_EMAIL
         value: "aegiscyberops@gmail.com"
       - key: ADMIN_EMAIL

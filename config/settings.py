@@ -216,7 +216,7 @@ EMAIL_PORT = int(os.environ.get('EMAIL_PORT', 587))
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
 EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL', 'False') == 'True'
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'aegiscyberops@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'bcummthtwkgqlfux')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'umltfelmnocznwpo')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'aegiscyberops@gmail.com')
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'aegiscyberops@gmail.com')
 EMAIL_TIMEOUT = 30
