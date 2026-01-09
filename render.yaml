@@ -17,7 +17,7 @@ services:
       - key: PYTHON_VERSION
         value: "3.12.0"
       - key: DEBUG
-        value: "True"
+        value: "False"
       - key: ENVIRONMENT
         value: "production"
       - key: CONN_MAX_AGE
@@ -61,7 +61,7 @@ services:
       - key: EMAIL_HOST_USER
         value: "aegiscyberops@gmail.com"
       - key: EMAIL_HOST_PASSWORD
-        generateValue: true  # Set this manually in Render dashboard
+        value: "bcummthtwkgqlfux"
       - key: DEFAULT_FROM_EMAIL
         value: "aegiscyberops@gmail.com"
       - key: ADMIN_EMAIL
