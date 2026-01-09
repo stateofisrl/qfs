@@ -13,5 +13,8 @@ python manage.py migrate --no-input
 echo "[3/4] Collecting static files..."
 python manage.py collectstatic --no-input --clear
 
-echo "[4/4] Setup complete!"
+echo "[4/5] Creating admin user..."
+python create_admin.py
+
+echo "[5/5] Setup complete!"
 echo "✓ Ready for deployment on Render!"
