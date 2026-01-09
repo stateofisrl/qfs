@@ -3,10 +3,10 @@ Withdrawals URLs.
 """
 
 from django.urls import path, include
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import DefaultRouter
 from .views import WithdrawalViewSet
 
-router = SimpleRouter()
+router = DefaultRouter()
 router.register(r'', WithdrawalViewSet, basename='withdrawal')
 
 urlpatterns = [
