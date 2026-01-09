@@ -26,35 +26,48 @@ def stash_old_deposit_state(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Deposit)
 def handle_deposit_credit(sender, instance, created, **kwargs):
-    """Credit balance when a deposit becomes approved (create or update)."""
+    """Credit balance when a deposit becomes approved, deduct if rejected after approval."""
     from django.db import transaction
     from django.db.models import F
     
     old_status = getattr(instance, '_old_status', None)
     old_approved_at = getattr(instance, '_old_approved_at', None)
 
+    # Newly approved - credit balance
     is_new_approval = (
         instance.status == 'approved' and
         (old_status != 'approved') and
         (old_approved_at is None)
     )
 
-    if not is_new_approval:
+    # Changed from approved to rejected - deduct balance
+    is_rejection_after_approval = (
+        instance.status == 'rejected' and
+        old_status == 'approved' and
+        old_approved_at is not None
+    )
+
+    if not is_new_approval and not is_rejection_after_approval:
         return
 
     # Use atomic transaction to avoid race conditions
     with transaction.atomic():
-        # Use F expression to increment atomically
         from django.contrib.auth import get_user_model
         User = get_user_model()
-        # Credit the original currency amount (not the crypto amount)
-        amount_to_credit = instance.currency_amount if instance.currency_amount else instance.amount
-        User.objects.filter(pk=instance.user.pk).update(balance=F('balance') + amount_to_credit)
+        # Get the amount (original currency amount, not crypto)
+        amount = instance.currency_amount if instance.currency_amount else instance.amount
         
-        # Stamp approval time if not set
-        Deposit.objects.filter(pk=instance.pk, approved_at__isnull=True).update(approved_at=timezone.now())
-        
-    print(f"[SIGNAL] Credited {amount_to_credit} to user {instance.user.email} for deposit #{instance.pk}")
+        if is_new_approval:
+            # Credit balance
+            User.objects.filter(pk=instance.user.pk).update(balance=F('balance') + amount)
+            # Stamp approval time if not set
+            Deposit.objects.filter(pk=instance.pk, approved_at__isnull=True).update(approved_at=timezone.now())
+            print(f"[SIGNAL] Credited ${amount} to user {instance.user.email} for deposit #{instance.pk}")
+            
+        elif is_rejection_after_approval:
+            # Deduct balance (reversal)
+            User.objects.filter(pk=instance.user.pk).update(balance=F('balance') - amount)
+            print(f"[SIGNAL] Deducted ${amount} from user {instance.user.email} - deposit #{instance.pk} rejected after approval")
 
 
 @receiver(post_save, sender=Deposit)
